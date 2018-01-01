@@ -1,9 +1,10 @@
 package etc
 
 import (
+	"errors"
 	"regexp"
 	"strings"
-	"errors"
+
 	"gopkg.in/src-d/go-git.v4"
 )
 
@@ -52,5 +53,10 @@ func GetDefaultRemote(path string) (*Remote, error) {
 		return nil, err
 	}
 	return NewRemote(remote.Config().URLs[0]) // FIXME
+}
 
+func PanicIfError(err error) {
+	if err != nil {
+		panic(err)
+	}
 }
