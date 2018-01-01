@@ -1,0 +1,17 @@
+version: "3"
+services:
+  build: &build
+    image: {{ .DockerImage }}
+    volumes:
+      - $PWD:/go/src/github.com/{{ .UserName }}/{{ .RepoName }}
+    environment:
+      GITHUB_TOKEN: $GITHUB_TOKEN
+      REPO_OWNER: {{ .UserName }}
+    working_dir: /go/src/github.com/{{ .UserName }}/{{ .RepoName }}
+    command: gored build
+  build-docker:
+    <<: *build
+    command: gored build-docker
+  release:
+    <<: *build
+    command: make release -f /Makefile
