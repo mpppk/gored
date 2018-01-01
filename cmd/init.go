@@ -20,7 +20,9 @@ var initCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		repoPath := "."
 		etc.GenerateDockerComposeFile(repoPath, defaultDockerImage, outputDockerComposeFileName)
-		fmt.Printf("Generate dokcer-compose file to %s", repoPath+"/"+outputDockerComposeFileName)
+		fmt.Printf("Generate dokcer-compose file to %s", repoPath+"/"+outputDockerComposeFileName+"\n")
+		etc.GenerateMakefile(repoPath, outputMakeFileName)
+		fmt.Printf("Generate Makefile to %s", repoPath+"/"+outputMakeFileName+"\n")
 	},
 }
 
