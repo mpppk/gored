@@ -7,6 +7,9 @@ ifdef update
   u=-u
 endif
 
+bindata:
+	go-bindata -pkg etc -o etc/bindata.go tmpl/
+
 deps:
 	dep ensure
 
