@@ -22,7 +22,7 @@ func NewInitOpt(repoPath string) (*InitOpt, error) {
 	return &InitOpt{
 		UserName:  remote.Owner,
 		RepoName:  remote.RepoName,
-		BuildPath: "./cmd/",
+		BuildPath: ".",
 	}, err
 }
 

@@ -14,4 +14,4 @@ services:
     command: gored build-docker
   release:
     <<: *build
-    command: make release -f /Makefile
+    command: make release -f Makefile.gored
