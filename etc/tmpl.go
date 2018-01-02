@@ -17,12 +17,12 @@ type InitOpt struct {
 	BuildPath   string
 }
 
-func NewInitOpt(repoPath string) (*InitOpt, error) {
+func NewInitOpt(repoPath string, buildPath string) (*InitOpt, error) {
 	remote, err := GetDefaultRemote(repoPath)
 	return &InitOpt{
 		UserName:  remote.Owner,
 		RepoName:  remote.RepoName,
-		BuildPath: ".",
+		BuildPath: buildPath,
 	}, err
 }
 
@@ -47,8 +47,8 @@ func generateFileFromTemplate(tmplName, tmplFilePath, outputFilePath string, opt
 
 }
 
-func GenerateDockerComposeFile(repoPath, dockerImageName, dockerComposeFilePath string) error {
-	opt, err := NewInitOpt(repoPath)
+func GenerateDockerComposeFile(repoPath, dockerImageName, dockerComposeFilePath, buildPath string) error {
+	opt, err := NewInitOpt(repoPath, buildPath)
 	if err != nil {
 		return err
 	}
@@ -57,8 +57,8 @@ func GenerateDockerComposeFile(repoPath, dockerImageName, dockerComposeFilePath 
 	return generateFileFromTemplate("makefile", tmplDockerComposeFilePath, dockerComposeFilePath, opt)
 }
 
-func GenerateMakefile(repoPath, makefilePath string) error {
-	opt, err := NewInitOpt(repoPath)
+func GenerateMakefile(repoPath, makefilePath, buildPath string) error {
+	opt, err := NewInitOpt(repoPath, buildPath)
 	if err != nil {
 		return err
 	}

@@ -13,19 +13,23 @@ const (
 	defaultDockerImage          = "mpppk/gored"
 )
 
+var buildPath string
+
 var initCmd = &cobra.Command{
 	Use:   "init",
 	Short: "Generate docker-compose.yml and Makefile",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		repoPath := "."
-		etc.GenerateDockerComposeFile(repoPath, defaultDockerImage, outputDockerComposeFileName)
+		etc.GenerateDockerComposeFile(repoPath, defaultDockerImage, outputDockerComposeFileName, buildPath)
 		fmt.Printf("Generate dokcer-compose file to %s", repoPath+"/"+outputDockerComposeFileName+"\n")
-		etc.GenerateMakefile(repoPath, outputMakeFileName)
+		etc.GenerateMakefile(repoPath, outputMakeFileName, buildPath)
 		fmt.Printf("Generate Makefile to %s", repoPath+"/"+outputMakeFileName+"\n")
 	},
 }
 
 func init() {
+	initCmd.Flags().StringVarP(&buildPath, "build-path", "b", ".", "build path")
+
 	RootCmd.AddCommand(initCmd)
 }
