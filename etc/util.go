@@ -5,6 +5,12 @@ import (
 	"regexp"
 	"strings"
 
+	"os"
+
+	"fmt"
+
+	"path/filepath"
+
 	"gopkg.in/src-d/go-git.v4"
 )
 
@@ -59,4 +65,50 @@ func PanicIfError(err error) {
 	if err != nil {
 		panic(err)
 	}
+}
+
+func IsExist(filename string) bool {
+	_, err := os.Stat(filename)
+	return err == nil
+}
+
+func GetDockerComposeFilePath(basePath string) (string, error) {
+	filePath := filepath.Clean(basePath + "/docker-compose.yml")
+	if !IsExist(filePath) {
+		return filePath, nil
+	}
+
+	filePath = filepath.Clean(basePath + "/docker-compose.gored.yml")
+	if !IsExist(filePath) {
+		return filePath, nil
+	}
+
+	for i := 1; i < 1000; i++ {
+		filePath := filepath.Clean(fmt.Sprintf(basePath+"/docker-compose.gored%d.yml", i))
+		if !IsExist(filePath) {
+			return filePath, nil
+		}
+	}
+	return "", errors.New("creating docker-compose file name is failed")
+}
+
+func GetMakeFilePath(basePath string) (string, error) {
+	filePath := filepath.Clean(basePath + "/Makefile")
+	if !IsExist(filePath) {
+		return filePath, nil
+	}
+
+	filePath = filepath.Clean(basePath + "/Makefile.gored")
+	if !IsExist(filePath) {
+		return filePath, nil
+	}
+
+	for i := 1; i < 1000; i++ {
+		filePath := filepath.Clean(fmt.Sprintf(basePath+"/Makefile.gored%d", i))
+		if !IsExist(filePath) {
+			return filePath, nil
+		}
+	}
+
+	return "", errors.New("creating Makefile name is failed")
 }

@@ -8,9 +8,7 @@ import (
 )
 
 const (
-	outputDockerComposeFileName = "docker-compose.gored.yml"
-	outputMakeFileName          = "Makefile.gored"
-	defaultDockerImage          = "mpppk/gored"
+	defaultDockerImage = "mpppk/gored"
 )
 
 var buildPath string
@@ -21,10 +19,32 @@ var initCmd = &cobra.Command{
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		repoPath := "."
-		etc.GenerateDockerComposeFile(repoPath, defaultDockerImage, outputDockerComposeFileName, buildPath)
-		fmt.Printf("Generate dokcer-compose file to %s", repoPath+"/"+outputDockerComposeFileName+"\n")
-		etc.GenerateMakefile(repoPath, outputMakeFileName, buildPath)
-		fmt.Printf("Generate Makefile to %s", repoPath+"/"+outputMakeFileName+"\n")
+
+		if len(args) > 0 {
+			repoPath = args[0]
+		}
+
+		dockerComposeFilePath, err := etc.GetDockerComposeFilePath(repoPath)
+		etc.PanicIfError(err)
+
+		makefilePath, err := etc.GetMakeFilePath(repoPath)
+		etc.PanicIfError(err)
+
+		fg := &etc.FileGenerator{
+			RepoPath:              repoPath,
+			DockerImageName:       defaultDockerImage,
+			DockerComposeFilePath: dockerComposeFilePath,
+			MakefilePath:          makefilePath,
+			BuildPath:             buildPath,
+		}
+
+		err = fg.GenerateDockerComposeFile()
+		etc.PanicIfError(err)
+		fmt.Printf("Generate dokcer-compose file to %s\n", dockerComposeFilePath)
+
+		err = fg.GenerateMakefile()
+		etc.PanicIfError(err)
+		fmt.Printf("Generate Makefile to %s\n", makefilePath)
 	},
 }
 

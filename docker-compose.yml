@@ -8,10 +8,10 @@ services:
       GITHUB_TOKEN: $GITHUB_TOKEN
       REPO_OWNER: mpppk
     working_dir: /go/src/github.com/mpppk/gored
-    command: gored build
+    command: make build -f gored/Makefile
   build-docker:
     <<: *build
-    command: gored build-docker
+    command: make build-docker -f gored/Makefile
   release:
     <<: *build
-    command: make release -f Makefile.gored
+    command: make release -f gored/Makefile

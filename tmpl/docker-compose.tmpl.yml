@@ -8,10 +8,10 @@ services:
       GITHUB_TOKEN: $GITHUB_TOKEN
       REPO_OWNER: {{ .UserName }}
     working_dir: /go/src/github.com/{{ .UserName }}/{{ .RepoName }}
-    command: gored build
+    command: make build -f {{ .MakefilePath }}
   build-docker:
     <<: *build
-    command: gored build-docker
+    command: make build-docker -f {{ .MakefilePath }}
   release:
     <<: *build
-    command: make release -f Makefile.gored
+    command: make release -f {{ .MakefilePath }}
