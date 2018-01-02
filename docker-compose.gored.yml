@@ -1,0 +1,17 @@
+version: "3"
+services:
+  build: &build
+    image: mpppk/gored
+    volumes:
+      - $PWD:/go/src/github.com/mpppk/gored
+    environment:
+      GITHUB_TOKEN: $GITHUB_TOKEN
+      REPO_OWNER: mpppk
+    working_dir: /go/src/github.com/mpppk/gored
+    command: gored build
+  build-docker:
+    <<: *build
+    command: gored build-docker
+  release:
+    <<: *build
+    command: make release -f Makefile.gored

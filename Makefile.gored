@@ -1,8 +1,9 @@
 CURRENT_REVISION = $(shell git rev-parse --short HEAD)
 BUILD_LDFLAGS = "-X github.com/Songmu/goxz.revision=$(CURRENT_REVISION)"
-REPO_OWNER = "mpppk"
-REPO_NAME = "goreleng-test"
-CURRENT_VERSION = $(shell gobump show -r ./cmd/)
+REPO_OWNER = mpppk
+REPO_NAME = gored
+BUILD_PATH = .
+CURRENT_VERSION = $(shell gobump show -r .)
 ifdef update
   u=-u
 endif
@@ -24,18 +25,22 @@ test: deps
 	go test ./...
 
 build: deps
-	go build -ldflags=$(BUILD_LDFLAGS) ./cmd/goxz
+	go build -ldflags=$(BUILD_LDFLAGS) $(BUILD_PATH)
+
+install: deps
+	go install -ldflags=$(BUILD_LDFLAGS) $(BUILD_PATH)
 
 crossbuild: deps test
-	goxz -pv=v${CURRENT_VERSION} -d=./dist/v${CURRENT_VERSION} ./cmd
+	goxz -pv=v$(CURRENT_VERSION) -d=./dist/v$(CURRENT_VERSION) $(BUILD_PATH)
 
 bump: deps test
-	gobump patch -w ./cmd
+	gobump patch -w $(BUILD_PATH)
+	sleep 1
 	git commit -am "Checking in changes prior to tagging of version v$(CURRENT_VERSION)"
 	git tag $(CURRENT_VERSION)
-	git push "https://${GITHUB_TOKEN}@github.com/${REPO_OWNER}/${REPO_NAME}" HEAD:master
+	git push "https://$(GITHUB_TOKEN)@github.com/$(REPO_OWNER)/$(REPO_NAME)" HEAD:master
 
 release: bump crossbuild
-	ghr --username ${REPO_OWNER} ${CURRENT_VERSION} dist/v${CURRENT_VERSION}
+	ghr --username $(REPO_OWNER) $(CURRENT_VERSION) dist/v$(CURRENT_VERSION)
 
-.PHONY: bump test deps devel-deps crossbuild release
+.PHONY: bump test deps devel-deps crossbuild releasee
