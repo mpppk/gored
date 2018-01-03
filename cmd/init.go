@@ -30,12 +30,16 @@ var initCmd = &cobra.Command{
 		makefilePath, err := etc.GetMakeFilePath(repoPath)
 		etc.PanicIfError(err)
 
+		circleCIConfigFilePath, err := etc.GetCircleCIConfigFilePath(repoPath)
+		etc.PanicIfError(err)
+
 		fg := &etc.FileGenerator{
-			RepoPath:              repoPath,
-			DockerImageName:       defaultDockerImage,
-			DockerComposeFilePath: dockerComposeFilePath,
-			MakefilePath:          makefilePath,
-			BuildPath:             buildPath,
+			RepoPath:               repoPath,
+			DockerImageName:        defaultDockerImage,
+			DockerComposeFilePath:  dockerComposeFilePath,
+			MakefilePath:           makefilePath,
+			CircleCIConfigFilePath: circleCIConfigFilePath,
+			BuildPath:              buildPath,
 		}
 
 		err = fg.GenerateDockerComposeFile()
@@ -45,6 +49,10 @@ var initCmd = &cobra.Command{
 		err = fg.GenerateMakefile()
 		etc.PanicIfError(err)
 		fmt.Printf("Generate Makefile to %s\n", makefilePath)
+
+		err = fg.GenerateCircleCIConfigFile()
+		etc.PanicIfError(err)
+		fmt.Printf("Generate CircleCI config file to %s\n", circleCIConfigFilePath)
 	},
 }
 

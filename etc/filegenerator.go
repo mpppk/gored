@@ -6,8 +6,9 @@ import (
 )
 
 const (
-	tmplDockerComposeFilePath = "tmpl/docker-compose.tmpl.yml"
-	tmplMakefilePath          = "tmpl/Makefile.tmpl"
+	tmplDockerComposeFilePath  = "tmpl/docker-compose.tmpl.yml"
+	tmplMakefilePath           = "tmpl/Makefile.tmpl"
+	tmplCircleCIConfigFilePath = "tmpl/config.tmpl.yml"
 )
 
 type fileGeneratorOpt struct {
@@ -40,11 +41,12 @@ func generateFileFromTemplate(tmplName, tmplFilePath, outputFilePath string, opt
 }
 
 type FileGenerator struct {
-	RepoPath              string
-	DockerImageName       string
-	DockerComposeFilePath string
-	MakefilePath          string
-	BuildPath             string
+	RepoPath               string
+	DockerImageName        string
+	DockerComposeFilePath  string
+	MakefilePath           string
+	CircleCIConfigFilePath string
+	BuildPath              string
 }
 
 func (f *FileGenerator) GenerateDockerComposeFile() error {
@@ -63,6 +65,14 @@ func (f *FileGenerator) GenerateMakefile() error {
 		return err
 	}
 	return generateFileFromTemplate("makefile", tmplMakefilePath, f.MakefilePath, opt)
+}
+
+func (f *FileGenerator) GenerateCircleCIConfigFile() error {
+	opt, err := f.NewOpt()
+	if err != nil {
+		return err
+	}
+	return generateFileFromTemplate("circleci", tmplCircleCIConfigFilePath, f.CircleCIConfigFilePath, opt)
 }
 
 func (f *FileGenerator) NewOpt() (*fileGeneratorOpt, error) {

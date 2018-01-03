@@ -112,3 +112,31 @@ func GetMakeFilePath(basePath string) (string, error) {
 
 	return "", errors.New("creating Makefile name is failed")
 }
+
+func GetCircleCIConfigFilePath(basePath string) (string, error) {
+	dirPath := filepath.Clean(basePath + "/.circleci")
+	if !IsExist(dirPath) {
+		if err := os.Mkdir(dirPath, 0755); err != nil {
+			return "", err
+		}
+	}
+
+	filePath := filepath.Clean(basePath + "/.circleci/config.yml")
+	if !IsExist(filePath) {
+		return filePath, nil
+	}
+
+	filePath = filepath.Clean(basePath + "/.circleci/config.gored.yml")
+	if !IsExist(filePath) {
+		return filePath, nil
+	}
+
+	for i := 1; i < 1000; i++ {
+		filePath := filepath.Clean(fmt.Sprintf(basePath+"/.circleci/config.gored%d.yml", i))
+		if !IsExist(filePath) {
+			return filePath, nil
+		}
+	}
+
+	return "", errors.New("creating Makefile name is failed")
+}
