@@ -6,12 +6,26 @@ services:
       - $PWD:/go/src/github.com/{{ .UserName }}/{{ .RepoName }}
     environment:
       GITHUB_TOKEN: $GITHUB_TOKEN
-      REPO_OWNER: {{ .UserName }}
     working_dir: /go/src/github.com/{{ .UserName }}/{{ .RepoName }}
     command: make build -f {{ .MakefilePath }}
+  bindata:
+    <<: *build
+    command: make bindata -f {{ .MakefilePath }}
+  lint:
+    <<: *build
+    command: make lint -f {{ .MakefilePath }}
+  test:
+    <<: *build
+    command: make test -f {{ .MakefilePath }}
   build-docker:
     <<: *build
     command: make build-docker -f {{ .MakefilePath }}
+  crossbuild:
+    <<: *build
+    command: make crossbuild -f {{ .MakefilePath }}
+  bump-and-commit:
+    <<: *build
+    command: make bump-and-commit -f {{ .MakefilePath }}
   release:
     <<: *build
     command: make release -f {{ .MakefilePath }}
