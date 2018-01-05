@@ -12,13 +12,16 @@ bindata:
 deps:
 	dep ensure
 
-devel-deps:
+setup:
 	go get ${u} github.com/golang/dep/cmd/dep
 	go get ${u} github.com/Masterminds/glide
 	go get ${u} github.com/motemen/gobump/cmd/gobump
 	go get ${u} github.com/Songmu/goxz/cmd/goxz
 	go get ${u} github.com/Songmu/ghch/cmd/ghch
 	go get ${u} github.com/tcnksm/ghr
+
+lint: deps
+	gometalinter
 
 test: deps
 	go test ./...
@@ -32,16 +35,18 @@ install: deps
 crossbuild: deps test
 	goxz -pv=v`gobump show -r $(BUILD_PATH)` -d=./dist/v`gobump show -r $(BUILD_PATH)` $(BUILD_PATH)
 
-bump: deps test
+bump-and-commit: deps test
 	gobump patch -w $(BUILD_PATH)
-	git commit -am "Checking in changes prior to tagging of version v`gobump show -r $(BUILD_PATH)`"
+	ghch -w -N v`gobump show -r $(BUILD_PATH)`
+	git add CHANGELOG.md
+	git commit -am "Checking in changes prior to tagging of version v`gobump show -r $(BUILD_PATH)` [skip ci]"
 	git tag `gobump show -r $(BUILD_PATH)`
 	git push "https://$(GITHUB_TOKEN)@github.com/$(REPO_OWNER)/$(REPO_NAME)" HEAD:master
 
-release: bump crossbuild
+release: crossbuild
 	ghr --username $(REPO_OWNER) `gobump show -r $(BUILD_PATH)` dist/v`gobump show -r $(BUILD_PATH)`
 
 circleci:
 	circleci build -e GITHUB_TOKEN=$GITHUB_TOKEN
 
-.PHONY: bump test deps devel-deps crossbuild release
+.PHONY: bindata deps setup lint test build install crossbuild bump-and-commit release circleci

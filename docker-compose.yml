@@ -1,0 +1,28 @@
+version: "3"
+services:
+  build: &build
+    image: mpppk/gored
+    volumes:
+      - $PWD:/go/src/github.com/mpppk/gored
+    environment:
+      GITHUB_TOKEN: $GITHUB_TOKEN
+    working_dir: /go/src/github.com/mpppk/gored
+    command: make build -f Makefile
+  lint:
+    <<: *build
+    command: make lint -f Makefile
+  test:
+    <<: *build
+    command: make test -f Makefile
+  build-docker:
+    <<: *build
+    command: make build-docker -f Makefile
+  crossbuild:
+    <<: *build
+    command: make crossbuild -f Makefile
+  bump-and-commit:
+    <<: *build
+    command: make bump-and-commit -f Makefile
+  release:
+    <<: *build
+    command: make release -f Makefile
