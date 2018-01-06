@@ -36,7 +36,7 @@ crossbuild: deps test
 	goxz -pv=v`gobump show -r $(VERSION_PATH)` -d=./dist/v`gobump show -r $(VERSION_PATH)` $(BUILD_PATH)
 
 bump-and-commit: deps test
-	gobump patch -w $(BUILD_PATH)
+	gobump patch -w $(VERSION_PATH)
 	ghch -w -N v`gobump show -r $(VERSION_PATH)`
 	git add CHANGELOG.md
 	git commit -am "Checking in changes prior to tagging of version v`gobump show -r $(VERSION_PATH)` [skip ci]"
