@@ -8,6 +8,9 @@ services:
       GITHUB_TOKEN: $GITHUB_TOKEN
     working_dir: /go/src/github.com/mpppk/gored
     command: make build -f Makefile
+  bindata:
+    <<: *build
+    command: make bindata -f Makefile
   lint:
     <<: *build
     command: make lint -f Makefile
