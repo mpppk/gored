@@ -1,7 +1,7 @@
 version: 2
 jobs:
-  build:
-    docker: &build
+  build: &build
+    docker:
       - image: {{ .DockerImage }}
     working_directory: /go/src/github.com/{{ .UserName }}/{{ .RepoName }}
     steps:
