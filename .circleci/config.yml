@@ -1,8 +1,8 @@
 version: 2
 jobs:
-  build:
-    docker: &build
-      - image: 
+  build: &build
+    docker:
+      - image: mpppk/gored
     working_directory: /go/src/github.com/mpppk/gored
     steps:
       - checkout

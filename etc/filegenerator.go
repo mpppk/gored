@@ -56,8 +56,6 @@ func (f *FileGenerator) GenerateDockerComposeFile() error {
 	if err != nil {
 		return err
 	}
-
-	opt.DockerImage = f.DockerImageName
 	return generateFileFromTemplate("docker-compose", tmplDockerComposeFilePath, f.DockerComposeFilePath, opt)
 }
 
@@ -88,6 +86,7 @@ func (f *FileGenerator) NewOpt() (*fileGeneratorOpt, error) {
 	return &fileGeneratorOpt{
 		UserName:     remote.Owner,
 		RepoName:     remote.RepoName,
+		DockerImage:  f.DockerImageName,
 		BuildPath:    f.BuildPath,
 		VersionPath:  versionPath,
 		MakefilePath: f.MakefilePath,
