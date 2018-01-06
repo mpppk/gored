@@ -1,5 +1,7 @@
 gored is release engineering (on docker) tool for golang project
 
+[![CircleCI](https://circleci.com/gh/mpppk/gored.svg?style=svg)](https://circleci.com/gh/mpppk/gored) [![codebeat badge](https://codebeat.co/badges/5e37d2ec-d6d0-4cfb-9c71-5bbcbe22c63e)](https://codebeat.co/projects/github-com-mpppk-gored-master)
+
 # Usage
 
 ```Shell
