@@ -12,6 +12,7 @@ const (
 )
 
 var buildPath string
+var versionPath string
 
 var initCmd = &cobra.Command{
 	Use:   "init",
@@ -40,6 +41,7 @@ var initCmd = &cobra.Command{
 			MakefilePath:           makefilePath,
 			CircleCIConfigFilePath: circleCIConfigFilePath,
 			BuildPath:              buildPath,
+			VersionPath:            versionPath,
 		}
 
 		err = fg.GenerateDockerComposeFile()
@@ -58,6 +60,7 @@ var initCmd = &cobra.Command{
 
 func init() {
 	initCmd.Flags().StringVarP(&buildPath, "build-path", "b", ".", "build path")
+	initCmd.Flags().StringVarP(&versionPath, "version-path", "V", "", "version file path")
 
 	RootCmd.AddCommand(initCmd)
 }

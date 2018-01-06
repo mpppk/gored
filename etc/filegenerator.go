@@ -16,6 +16,7 @@ type fileGeneratorOpt struct {
 	UserName     string
 	RepoName     string
 	BuildPath    string
+	VersionPath  string
 	MakefilePath string
 }
 
@@ -47,6 +48,7 @@ type FileGenerator struct {
 	MakefilePath           string
 	CircleCIConfigFilePath string
 	BuildPath              string
+	VersionPath            string
 }
 
 func (f *FileGenerator) GenerateDockerComposeFile() error {
@@ -77,10 +79,17 @@ func (f *FileGenerator) GenerateCircleCIConfigFile() error {
 
 func (f *FileGenerator) NewOpt() (*fileGeneratorOpt, error) {
 	remote, err := GetDefaultRemote(f.RepoPath)
+
+	versionPath := f.BuildPath
+	if f.VersionPath != "" {
+		versionPath = f.VersionPath
+	}
+
 	return &fileGeneratorOpt{
 		UserName:     remote.Owner,
 		RepoName:     remote.RepoName,
 		BuildPath:    f.BuildPath,
+		VersionPath:  versionPath,
 		MakefilePath: f.MakefilePath,
 	}, err
 }
