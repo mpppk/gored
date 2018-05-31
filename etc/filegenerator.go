@@ -1,7 +1,9 @@
 package etc
 
 import (
+	"fmt"
 	"os"
+	"path/filepath"
 	"text/template"
 )
 
@@ -28,6 +30,11 @@ func generateFileFromTemplate(tmplName, tmplFilePath, outputFilePath string, opt
 
 	tpl := template.Must(template.New(tmplName).Parse(string(templateContents)))
 
+	outputFileDir := filepath.Dir(outputFilePath)
+	if err := os.MkdirAll(outputFileDir, 0755); err != nil {
+		return err
+	}
+
 	outputFile, err := os.Create(outputFilePath)
 	if err != nil {
 		return err
@@ -37,8 +44,8 @@ func generateFileFromTemplate(tmplName, tmplFilePath, outputFilePath string, opt
 	if err != nil {
 		return err
 	}
-	return nil
 
+	return nil
 }
 
 type FileGenerator struct {
@@ -77,6 +84,14 @@ func (f *FileGenerator) GenerateCircleCIConfigFile() error {
 
 func (f *FileGenerator) NewOpt() (*fileGeneratorOpt, error) {
 	remote, err := GetDefaultRemote(f.RepoPath)
+
+	if err != nil {
+		absPath, e := filepath.Abs(f.RepoPath)
+		if e != nil {
+			return nil, fmt.Errorf("invalid repository path: %s", f.RepoPath)
+		}
+		return nil, fmt.Errorf("failed to get default remote from %s: %s", absPath, err)
+	}
 
 	versionPath := f.BuildPath
 	if f.VersionPath != "" {
