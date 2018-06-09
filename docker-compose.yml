@@ -17,6 +17,12 @@ services:
   test:
     <<: *build
     command: make test -f Makefile
+  coverage:
+    <<: *build
+    command: make coverage -f Makefile
+  codecov:
+    <<: *build
+    command: make codecov -f Makefile
   build-docker:
     <<: *build
     command: make build-docker -f Makefile

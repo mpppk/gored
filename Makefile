@@ -26,6 +26,12 @@ lint: deps
 test: deps
 	go test ./...
 
+coverage: deps
+	go test -race -coverprofile=coverage.txt -covermode=atomic ./etc
+
+codecov: deps coverage
+	bash <(curl -s https://codecov.io/bash)
+
 build: deps
 	go build $(BUILD_PATH)
 
@@ -49,4 +55,4 @@ release: crossbuild
 circleci:
 	circleci build -e GITHUB_TOKEN=$GITHUB_TOKEN
 
-.PHONY: bindata deps setup lint test build install crossbuild bump-and-commit release circleci
+.PHONY: bindata deps setup lint test coverage codecov build install crossbuild bump-and-commit release circleci

@@ -6,7 +6,7 @@ jobs:
     working_directory: /go/src/github.com/mpppk/gored
     steps:
       - checkout
-      - run: make test -f Makefile
+      - run: make coverage -f Makefile
   release:
     <<: *build
     steps:
