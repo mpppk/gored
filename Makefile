@@ -2,6 +2,8 @@ REPO_OWNER = mpppk
 REPO_NAME = gored
 BUILD_PATH = .
 VERSION_PATH = cmd/
+SHELL = /bin/bash
+
 ifdef update
   u=-u
 endif
